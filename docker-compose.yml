@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   postgres:
@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: facepass123
       POSTGRES_DB: face_attendance
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -18,55 +18,55 @@ services:
       timeout: 5s
       retries: 5
 
-  python-service:
-    build:
-      context: ./python-service
-      dockerfile: Dockerfile
-    container_name: face_python_service
-    ports:
-      - "8001:8001"
-    environment:
-      - PYTHONUNBUFFERED=1
-    volumes:
-      - face_models:/app/models
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
+  # python-service:
+  #   build:
+  #     context: ./python-service
+  #     dockerfile: Dockerfile
+  #   container_name: face_python_service
+  #   ports:
+  #     - "8001:8001"
+  #   environment:
+  #     - PYTHONUNBUFFERED=1
+  #   volumes:
+  #     - face_models:/app/models
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+  #     interval: 15s
+  #     timeout: 10s
+  #     retries: 5
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: face_nest_backend
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: postgresql://faceadmin:facepass123@postgres:5432/face_attendance
-      PYTHON_SERVICE_URL: http://python-service:8001
-      JWT_SECRET: super_secret_jwt_key_change_in_prod
-      JWT_EXPIRES_IN: 7d
-      PORT: 3000
-    depends_on:
-      postgres:
-        condition: service_healthy
-      python-service:
-        condition: service_healthy
-    volumes:
-      - uploaded_images:/app/uploads
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: face_nest_backend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     DATABASE_URL: postgresql://faceadmin:facepass123@postgres:5432/face_attendance
+  #     PYTHON_SERVICE_URL: http://python-service:8001
+  #     JWT_SECRET: super_secret_jwt_key_change_in_prod
+  #     JWT_EXPIRES_IN: 7d
+  #     PORT: 3000
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     python-service:
+  #       condition: service_healthy
+  #   volumes:
+  #     - uploaded_images:/app/uploads
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: face_react_frontend
-    ports:
-      - "5173:80"
-    depends_on:
-      - backend
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: face_react_frontend
+  #   ports:
+  #     - "5173:80"
+  #   depends_on:
+  #     - backend
 
 volumes:
   postgres_data:
-  face_models:
-  uploaded_images:
+  # face_models:
+  # uploaded_images:
