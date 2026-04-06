@@ -22,7 +22,8 @@ api.interceptors.response.use(
   (err) => {
     const requestUrl = err.config.url;
     const isLoginUrl = requestUrl.includes("/auth/login");
-    if (!isLoginUrl && err.response?.status === 401) {
+    const isAttendanceMarkUrl = requestUrl.includes("/attendance/mark");
+    if (!isLoginUrl && !isAttendanceMarkUrl && err.response?.status === 401) {
       localStorage.removeItem("fa_token");
       localStorage.removeItem("fa_user");
       window.location.href = "/login";
