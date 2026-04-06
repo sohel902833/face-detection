@@ -8,13 +8,9 @@ import {
 import { PrismaService } from "../prisma/prisma.service";
 import { FaceService } from "../face/face.service";
 import { MarkAttendanceDto } from "./attendance.dto";
-import * as path from "path";
-import * as fs from "fs";
-
 @Injectable()
 export class AttendanceService {
   private readonly logger = new Logger(AttendanceService.name);
-  private readonly uploadsDir = path.join(__dirname, "../../", "/app/uploads");
   constructor(
     private prisma: PrismaService,
     private faceService: FaceService,
@@ -66,19 +62,13 @@ export class AttendanceService {
         `Face verification failed. Similarity: ${(matchResult.similarity * 100).toFixed(1)}%. Please try again with better lighting.`,
       );
     }
-
-    // 5. Save attendance photo
-    const filename = `attendance-${userId}-${Date.now()}.jpg`;
-    const photoPath = path.join(this.uploadsDir, filename);
-    fs.writeFileSync(photoPath, file.buffer);
-
     // 6. Record attendance
     const attendance = await this.prisma.attendance.create({
       data: {
         userId,
         date: attendanceDate,
         similarity: matchResult.similarity,
-        photoPath: `/uploads/${filename}`,
+        photoPath: `N/A`,
         status: "PRESENT",
       },
       include: {

@@ -10,21 +10,16 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "../prisma/prisma.service";
 import { FaceService } from "../face/face.service";
 import { RegisterDto, LoginDto } from "./auth.dto";
-import * as path from "path";
-import * as fs from "fs";
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  private readonly uploadsDir = path.join(__dirname, "../../", "/app/uploads");
 
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
     private faceService: FaceService,
-  ) {
-    fs.mkdirSync(this.uploadsDir, { recursive: true });
-  }
+  ) {}
 
   async register(dto: RegisterDto, file: Express.Multer.File) {
     // 1. Basic validation - check if user exists
@@ -52,18 +47,13 @@ export class AuthService {
       );
     }
 
-    // 3. Save photo
-    const filename = `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9.]/g, "_")}`;
-    const photoPath = path.join(this.uploadsDir, filename);
-    fs.writeFileSync(photoPath, file.buffer);
-
     // 4. Create user with embedding
     const user = await this.prisma.user.create({
       data: {
         name: dto.name,
         email: dto.email,
         phone: dto.phone,
-        photoPath: `/uploads/${filename}`,
+        photoPath: `N/A`,
         faceEmbedding: embeddingResult.embedding,
       },
       select: {
