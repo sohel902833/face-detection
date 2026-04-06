@@ -1,0 +1,48 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  name        String
+  email       String       @unique
+  phone       String?
+  passwordHash String?
+  photoPath   String?
+  faceEmbedding Float[]    // Store face embedding as float array
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  attendances Attendance[]
+
+  @@map("users")
+}
+
+model Attendance {
+  id          String   @id @default(uuid())
+  userId      String
+  date        DateTime
+  checkedInAt DateTime @default(now())
+  similarity  Float?   // Store face match confidence
+  photoPath   String?
+  status      AttendanceStatus @default(PRESENT)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("attendances")
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}

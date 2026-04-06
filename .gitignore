@@ -1,0 +1,83 @@
+############################################
+# GENERAL
+############################################
+node_modules/
+dist/
+build/
+.env
+.env.*
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+############################################
+# NESTJS BACKEND (Node.js)
+############################################
+backend/node_modules/
+backend/dist/
+backend/.env
+backend/.env.*
+backend/*.log
+backend/coverage/
+backend/.nestjs-cli.json
+backend/app/uploads/
+
+############################################
+# REACT FRONTEND
+############################################
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+frontend/*.log
+frontend/coverage/
+
+############################################
+# PYTHON FASTAPI SERVICE
+############################################
+python-service/__pycache__/
+python-service/*.py[cod]
+python-service/*$py.class
+
+# Virtual environments
+python-service/venv/
+python-service/.venv/
+python-service/env/
+python-service/.env
+
+# Python build artifacts
+python-service/build/
+python-service/dist/
+python-service/*.egg-info/
+
+# Cache & test
+python-service/.pytest_cache/
+python-service/.mypy_cache/
+python-service/.coverage
+python-service/htmlcov/
+python-service/models/
+
+############################################
+# IDE / EDITOR
+############################################
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+############################################
+# DOCKER (if you use it)
+############################################
+docker-compose.override.yml
+
+############################################
+# OS FILES
+############################################
+*.swp
+*.swo
